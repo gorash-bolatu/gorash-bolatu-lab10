@@ -1,0 +1,53 @@
+commit 6fd5ef86025b28e86a8cf5ce0b13c979139f826d
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Sat May 24 02:23:27 2025 +0800
+
+    refactoring
+
+commit b6d320be0ae7661e502d41a08bd6e8891229aa40
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Sat May 24 01:26:31 2025 +0800
+
+    test fixes
+
+commit 36126592b00456dd882f550da84588dbb40a198b
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Sat May 24 01:13:29 2025 +0800
+
+    ignore generated .txt files
+
+commit 8e6f3396617c199c445002db41dbd6c725784c57
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Fri May 23 22:33:22 2025 +0800
+
+    WordCounter
+
+commit a011ae684227f06052ae533dd8c04736520c44b1
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Fri May 23 22:33:14 2025 +0800
+
+    ignore .class files
+
+commit 7fde10554ac2abd2f425f107d4e7a7b3c0825d34
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Fri May 23 18:15:03 2025 +0800
+
+    Exception classes
+
+commit 2573bd83e29702b73f73c05f0fc1dfad80398cbd
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Wed May 14 10:24:38 2025 +0800
+
+    junit
+
+commit a90c85b6df1bf546682919552414b769831674e6
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Wed May 14 10:23:57 2025 +0800
+
+    new files
+
+commit bdb916c671d9ec37c882fdeb42fae3c153adade0
+Author: gorash-bolatu <cotwi10@yandex.ru>
+Date:   Wed May 14 10:21:01 2025 +0800
+
+    unpacked and uploaded
