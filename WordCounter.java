@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.InputMismatchException;
@@ -17,11 +16,8 @@ public class WordCounter {
         int stopword_at = 0;
         while (regexMatcher.find()) {
             totalcount++;
-            if (stopword != null && regexMatcher.group().equals(stopword)) {
-                if (stopword_at == 0) {
-                    stopword_at = totalcount;
-                }
-            }
+            if (stopword != null && stopword_at == 0 && regexMatcher.group().equals(stopword))
+                stopword_at = totalcount;
         }
         if (totalcount < 5)
             throw new TooSmallText("Only found " + totalcount + " words.");
@@ -59,31 +55,28 @@ public class WordCounter {
             throws InvalidStopwordException, TooSmallText {
         int option;
         scanner = new Scanner(System.in);
+        StringBuffer sb;
         while (true) {
             try {
                 option = scanner.nextInt(); // Input option 1 or 2
-                if (option < 1 || option > 2)
-                    throw new InputMismatchException();
+                switch (option) {
+                    case 1 -> {
+                        try {
+                            sb = processFile(args[0]);
+                        } catch (EmptyFileException e) {
+                            System.out.println(e);
+                            sb = new StringBuffer("");
+                        }
+                    }
+                    case 2 -> sb = new StringBuffer(args[0]);
+                    default -> throw new InputMismatchException();
+                }
                 break;
             } catch (InputMismatchException e) {
-                System.out.print("Invalid option. Choose again: ");
+                System.out.print(e);
             }
         }
-        String stopword = null;
-        if (args.length > 1) {
-            stopword = args[1];
-        }
-        StringBuffer sb;
-        if (option == 1) {
-            try {
-                sb = processFile(args[0]);
-            } catch (EmptyFileException e) {
-                System.out.println(e);
-                sb = new StringBuffer("");
-            }
-        } else {
-            sb = new StringBuffer(args[0]);
-        }
+        String stopword = (args.length > 1) ? args[1] : null;
         try {
             System.out.println("Found " + processText(sb, stopword) + " words.");
         } catch (InvalidStopwordException e) {
