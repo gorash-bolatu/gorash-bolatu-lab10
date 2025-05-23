@@ -11,19 +11,23 @@ public class WordCounter {
 
     public static int processText(StringBuffer text, String stopword) throws InvalidStopwordException, TooSmallText {
         Pattern regex = Pattern.compile("[\\w']+");
-        System.out.println("\nRegex: " + regex.toString());
-        System.out.println("String: " + text.toString());
-        Matcher regexMatcher = regex.matcher(text);
         int count = 0;
+        Matcher regexMatcher = regex.matcher(text);
         while (regexMatcher.find()) {
-            System.out.println("I just found the word: " + regexMatcher.group());
             count++;
-            if (stopword != null && regexMatcher.group().equals(stopword))
-                break;
         }
         if (count < 5)
-            throw new TooSmallText("Too small text");
-        return count;
+            throw new TooSmallText("Only found " + count + " words.");
+        if (stopword != null && !text.toString().contains(stopword))
+            throw new InvalidStopwordException("Couldn't find stopword: " + stopword);
+        int finalcount = 0;
+        Matcher anotherRegexMatcher = regex.matcher(text);
+        while (anotherRegexMatcher.find()) {
+            finalcount++;
+            if (stopword != null && anotherRegexMatcher.group().equals(stopword))
+                break;
+        }
+        return finalcount;
     }
 
     public static StringBuffer processFile(String path) throws EmptyFileException {
@@ -40,7 +44,7 @@ public class WordCounter {
             }
         }
         if (!file_scanner.hasNextLine())
-            throw new EmptyFileException(path);
+            throw new EmptyFileException(path + " was empty");
         try {
             while (file_scanner.hasNextLine())
                 fileContents.append(file_scanner.nextLine());
@@ -52,7 +56,6 @@ public class WordCounter {
 
     public static void main(String args[]) throws InvalidStopwordException, TooSmallText {
         int option;
-        System.out.print("1 - process a file, 2 - process a string: ");
         scanner = new Scanner(System.in);
         while (true) {
             try {
@@ -68,7 +71,6 @@ public class WordCounter {
         String stopword = null;
         if (args.length > 1)
             stopword = args[1];
-
         StringBuffer sb;
         if (option == 1) {
             try {
@@ -80,13 +82,13 @@ public class WordCounter {
         } else {
             sb = new StringBuffer(args[0]);
         }
-        System.out.println(processText(sb, stopword));
-
-        if (stopword != null && !sb.toString().contains(stopword)) {
-            System.out.print("Specified stopword not found. Input again: ");
+        try {
+            System.out.println("Found " + processText(sb, stopword) + " words.");
+        } catch (InvalidStopwordException e) {
             scanner = new Scanner(System.in);
             stopword = scanner.nextLine();
+        } catch (TooSmallText e) {
+            System.out.println(e);
         }
-        System.out.println(processText(sb, stopword));
     }
 }
