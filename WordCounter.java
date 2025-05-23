@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.InputMismatchException;
@@ -11,23 +12,24 @@ public class WordCounter {
 
     public static int processText(StringBuffer text, String stopword) throws InvalidStopwordException, TooSmallText {
         Pattern regex = Pattern.compile("[\\w']+");
-        int count = 0;
         Matcher regexMatcher = regex.matcher(text);
+        int totalcount = 0;
+        int stopword_at = 0;
         while (regexMatcher.find()) {
-            count++;
+            totalcount++;
+            if (stopword != null && regexMatcher.group().equals(stopword)) {
+                if (stopword_at == 0) {
+                    stopword_at = totalcount;
+                }
+            }
         }
-        if (count < 5)
-            throw new TooSmallText("Only found " + count + " words.");
-        if (stopword != null && !text.toString().contains(stopword))
+        if (totalcount < 5)
+            throw new TooSmallText("Only found " + totalcount + " words.");
+        if (stopword == null)
+            return totalcount;
+        if (!text.toString().contains(stopword))
             throw new InvalidStopwordException("Couldn't find stopword: " + stopword);
-        int finalcount = 0;
-        Matcher anotherRegexMatcher = regex.matcher(text);
-        while (anotherRegexMatcher.find()) {
-            finalcount++;
-            if (stopword != null && anotherRegexMatcher.group().equals(stopword))
-                break;
-        }
-        return finalcount;
+        return stopword_at;
     }
 
     public static StringBuffer processFile(String path) throws EmptyFileException {
@@ -39,13 +41,12 @@ public class WordCounter {
                 file_scanner = new Scanner(file);
             } catch (FileNotFoundException e) {
                 scanner = new Scanner(System.in);
-                System.out.println("Re-enter the filename: ");
-                file = new File(scanner.nextLine());
+                file = new File(scanner.nextLine()); // Re-enter the path
             }
         }
-        if (!file_scanner.hasNextLine())
-            throw new EmptyFileException(path + " was empty");
         try {
+            if (!file_scanner.hasNextLine())
+                throw new EmptyFileException(path + " was empty");
             while (file_scanner.hasNextLine())
                 fileContents.append(file_scanner.nextLine());
         } finally {
@@ -54,12 +55,13 @@ public class WordCounter {
         return fileContents;
     }
 
-    public static void main(String args[]) throws InvalidStopwordException, TooSmallText {
+    public static void main(String args[])
+            throws InvalidStopwordException, TooSmallText {
         int option;
         scanner = new Scanner(System.in);
         while (true) {
             try {
-                option = scanner.nextInt();
+                option = scanner.nextInt(); // Input option 1 or 2
                 if (option < 1 || option > 2)
                     throw new InputMismatchException();
                 break;
@@ -67,10 +69,10 @@ public class WordCounter {
                 System.out.print("Invalid option. Choose again: ");
             }
         }
-
         String stopword = null;
-        if (args.length > 1)
+        if (args.length > 1) {
             stopword = args[1];
+        }
         StringBuffer sb;
         if (option == 1) {
             try {
@@ -86,7 +88,8 @@ public class WordCounter {
             System.out.println("Found " + processText(sb, stopword) + " words.");
         } catch (InvalidStopwordException e) {
             scanner = new Scanner(System.in);
-            stopword = scanner.nextLine();
+            stopword = scanner.nextLine(); // Stopword not found, re-input
+            System.out.println("Found " + processText(sb, stopword) + " words.");
         } catch (TooSmallText e) {
             System.out.println(e);
         }
